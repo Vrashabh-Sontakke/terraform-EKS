@@ -1,5 +1,4 @@
 provider "kubernetes" {
-    load_config_file = false
     host = data.aws_eks_cluster.myapp-cluster.endpoint
     token = data.aws_eks_cluster_auth.myapp-cluster.token
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.myapp-cluster.certificate_authority.0.data)
@@ -15,12 +14,11 @@ data "aws_eks_cluster_auth" "myapp-cluster" {
 
 module "eks" {
     source = "terraform-aws-modules/eks/aws"
-    version = "17.21.0"
+    version = "19.6.0"
 
     cluster_name = "myapp-eks-cluster"
-    cluster_version = "1.21"
-
-    subnets = module.myapp-vpc.private_subnets
+    cluster_version = "2.17.0"
+    subnet_ids = module.myapp-vpc.private_subnets 
     vpc_id = module.myapp-vpc.vpc_id
 
     tags = {
@@ -28,7 +26,7 @@ module "eks" {
         application = "myapp"
     }
 
-    worker_groups = [
+    eks_managed_node_groups = [
         {
             instance_type = "t2.small"
             name = "worker-group-1"
