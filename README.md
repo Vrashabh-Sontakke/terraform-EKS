@@ -1,1 +1,1 @@
-# terraform-EKS
+## Automate provisioning EKS cluster with Terraform
